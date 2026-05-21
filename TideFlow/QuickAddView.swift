@@ -39,9 +39,13 @@ struct QuickAddView: View {
     @EnvironmentObject var lang: LanguageManager
 
     @State private var title      = ""
-    @State private var date       = Date()
+    @State private var date:      Date
     @State private var startTime  = Date()
     @State private var choice: DurationChoice = .preset(60)
+
+    init(initialDate: Date = Date()) {
+        _date = State(initialValue: initialDate)
+    }
     @State private var isSaving   = false
     @State private var showError  = false
     @State private var showCustomPicker = false

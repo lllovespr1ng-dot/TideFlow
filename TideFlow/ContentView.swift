@@ -3,9 +3,10 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var lang: LanguageManager
 
-    @State private var selectedTab      = 1   // Today is the default landing tab
-    @State private var showingQuickAdd  = false
-    @State private var showingSettings  = false
+    @State private var selectedTab        = 1   // Today is the default landing tab
+    @State private var showingQuickAdd    = false
+    @State private var showingSettings    = false
+    @State private var planSelectedDate   = Date()  // mirrors PlanView's chosen day
     @State private var showingOnboarding = !UserDefaults.standard.bool(forKey: "hasSeenLanguagePicker")
 
     var body: some View {
@@ -18,7 +19,7 @@ struct ContentView: View {
                 TodayView()
                     .tabItem { Label(lang.t(.tab_today), systemImage: "sun.horizon") }
                     .tag(1)
-                PlanView()
+                PlanView(selectedDate: $planSelectedDate)
                     .tabItem { Label(lang.t(.tab_plan),  systemImage: "calendar") }
                     .tag(2)
                 BrainDumpView()
@@ -42,7 +43,10 @@ struct ContentView: View {
                 .padding(.bottom, 90)
             }
         }
-        .sheet(isPresented: $showingQuickAdd) { QuickAddView() }
+        .sheet(isPresented: $showingQuickAdd) {
+            // On the Plan tab pass the currently selected day; elsewhere use today
+            QuickAddView(initialDate: selectedTab == 2 ? planSelectedDate : Date())
+        }
         .sheet(isPresented: $showingSettings)  { SettingsView() }
         // First-launch language picker
         .fullScreenCover(isPresented: $showingOnboarding) {

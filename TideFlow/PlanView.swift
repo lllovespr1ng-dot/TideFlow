@@ -5,7 +5,7 @@ struct PlanView: View {
     @EnvironmentObject var calendarManager: CalendarManager
     @EnvironmentObject var lang: LanguageManager
 
-    @State private var selectedDate     = Date()
+    @Binding var selectedDate: Date
     @State private var weekEvents: [Date: [EKEvent]] = [:]
     @State private var showingWeekPicker = false
 
